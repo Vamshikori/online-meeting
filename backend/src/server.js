@@ -31,12 +31,12 @@ app.get("/debug-sentry", (req, res) => {
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
 
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, "public")));
+// Serve frontend static files (look into ../public because server.js is inside /src)
+app.use(express.static(path.join(__dirname, "../public")));
 
-// Catch-all route → frontend index.html (use RegExp, not "*")
+// Catch-all route → frontend index.html (for React Router / SPA)
 app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
 });
 
 // Sentry error handler (after routes)
