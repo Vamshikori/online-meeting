@@ -50,7 +50,7 @@ CLIENT_URL=http://localhost:5173
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key_here
 VITE_STREAM_API_KEY=your_stream_api_key_here
 VITE_SENTRY_DSN=your_sentry_dsn_here
-VITE_API_BASE_URL=http://localhost:5001/api
+VITE_API_BASE_URL=https://online-meeting-3.onrender.com
 ```
 
 ---
