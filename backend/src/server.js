@@ -13,14 +13,17 @@ import * as Sentry from "@sentry/node";
 
 const app = express();
 
-// Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// --- Sentry middleware (must be before other middleware) ---
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
 
 // Middlewares
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
-app.use(clerkMiddleware()); // req.auth will be available in the request object
+app.use(clerkMiddleware());
 
 // Debug Sentry route
 app.get("/debug-sentry", (req, res) => {
@@ -31,16 +34,15 @@ app.get("/debug-sentry", (req, res) => {
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
 
-// Serve frontend static files (look into ../public because server.js is inside /src)
+// Serve frontend
 app.use(express.static(path.join(__dirname, "../public")));
 
-// Catch-all route → frontend index.html (for React Router / SPA)
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "../public", "index.html"));
 });
 
-// Sentry error handler (after routes)
-Sentry.setupExpressErrorHandler(app);
+// --- Sentry error handler (after routes) ---
+app.use(Sentry.Handlers.errorHandler());
 
 const startServer = async () => {
   try {
