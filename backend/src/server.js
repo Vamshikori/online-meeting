@@ -34,8 +34,8 @@ app.use("/api/chat", chatRoutes);
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, "public")));
 
-// Catch-all route → frontend index.html
-app.get("*", (req, res) => {
+// Catch-all route → frontend index.html (use RegExp, not "*")
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
